@@ -1,6 +1,6 @@
 import pytest
 import csv
-from DataStructures import listiterator as it
+from DataStructures import linkedlistiterator as it
 from DataStructures import liststructure as lt
 
 def test_carga():
@@ -21,5 +21,5 @@ def test_carga():
                 lt.addLast(lst,row)
     except:
         assert False, "Se presento un error al cargar el archivo"
-        
+
 
