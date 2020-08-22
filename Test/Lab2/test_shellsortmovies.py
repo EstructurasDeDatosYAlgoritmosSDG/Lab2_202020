@@ -22,7 +22,7 @@
 
 import pytest
 import config_sorting as cf
-from Sorting import insertionsort as sort
+from Sorting import shellsort as sort
 from DataStructures import listiterator as it
 from ADT import list as lt
 import csv
@@ -30,9 +30,8 @@ import csv
 #list_type = 'ARRAY_LIST'
 list_type = 'SINGLE_LINKED'
 
-lst_movies = lt.newList(list_type)
-moviesfile = cf.data_dir + 'Data/themoviesdb/MoviesCastingRaw-small.csv'
-
+lst_books = lt.newList(list_type)
+booksfile = cf.data_dir + 'Data/themoviesdb/MoviesCastingRaw-small.csv'
 
 def setUp():
     print('Loading movies')
@@ -56,7 +55,7 @@ def printList(lst):
         print(element['id'])
 
 def less(element1, element2):
-    if int(element1['id']) < int(element2['id']):
+    if int(element1['goodreads_book_id']) < int(element2['goodreads_book_id']):
         return True
     return False
 
@@ -68,14 +67,14 @@ def test_sort():
     Lista con elementos en orden aleatorio
     """
     print("sorting ....")
-    sort.insertionSort(lst_movies, less)
+    sort.shellSort(lst_movies, less)
 
 def test_loading_CSV_y_ordenamiento():
     """
     Prueba que se pueda leer el archivo y que despues de relizar el sort, el orden este correcto
     """
     setUp()
-    sort.insertionSort(lst_movies,less)
+    sort.shellSort(lst_movies,less)
     while not (lt.isEmpty(lst_movies)):
         x = int(lt.removeLast(lst_movies)['id'])
         if not (lt.isEmpty(lst_movies)):
