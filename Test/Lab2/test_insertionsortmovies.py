@@ -55,12 +55,14 @@ def printList(lst):
         element = it.next(iterator)
         print(element['id'])
 
-def less(element1, element2):
-    if int(element1['id']) < int(element2['id']):
+def less(element1, element2, llave):
+    if int(element1[llave]) < int(element2[llave]):
         return True
     return False
 
-def greater(element1, element2):
+def greater(element1, element2, llave):
+    if int(element1[llave]) > int(element2[llave]):
+        return True
     return False
 
 def test_sort():
