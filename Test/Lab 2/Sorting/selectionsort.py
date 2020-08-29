@@ -33,3 +33,4 @@ def selectionSort (lst, lessfunction):
                 minimum = pos2      # minimum se actualiza con la posición del nuevo elemento más pequeño
             pos2 += 1
         lt.exchange (lst, pos1, minimum)  # se intercambia el elemento más pequeño hasta ese punto con el elemento en pos1
+        pos1 += 1

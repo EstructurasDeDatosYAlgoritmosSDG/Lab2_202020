@@ -293,7 +293,6 @@ def isPresent (lst, element):
         return 0   
     except Exception as exp:
         error.reraise (exp, 'arraylist->isPresent: ')
-        print(exp)
 
 
 

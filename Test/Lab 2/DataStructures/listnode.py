@@ -19,17 +19,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
-import config as cf
-from ADT import list as lt
+"""
+  Estructura que contiene la información a guardar en una lista encadenada
+"""
 
-def selectionSort (lst, lessfunction): 
-    size =  lt.size(lst) 
-    pos1 = 1
-    while pos1 < size:
-        minimum = pos1              # minimun tiene el menor elemento conocido hasta ese momento
-        pos2 = pos1 + 1
-        while (pos2 <= size):
-            if (lessfunction (lt.getElement(lst, pos2),lt.getElement(lst, minimum))): 
-                minimum = pos2      # minimum se actualiza con la posición del nuevo elemento más pequeño
-            pos2 += 1
-        lt.exchange (lst, pos1, minimum)  # se intercambia el elemento más pequeño hasta ese punto con el elemento en pos1
+def newSingleNode (element):
+  """
+  Estructura que contiene la información a guardar en una lista encadenada
+  """
+  node = {'info':element,'next':None}
+  return (node)
+
+
+
+def getElement (node):
+  """
+  Retorna la información de un nodo
+  Args:
+    node: El nodo a examinar
+  Returns:
+    La información almacenada en el nodo
+  """
+  return node ['info']
+
+

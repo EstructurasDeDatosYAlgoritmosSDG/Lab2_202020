@@ -21,8 +21,8 @@
 
 
 import pytest
-import config as cf
-from Sorting import shellsort as sort
+import config_sorting as cf
+from Sorting import insertionsort as sort
 from DataStructures import listiterator as it
 from ADT import list as lt
 import csv
@@ -30,13 +30,14 @@ import csv
 #list_type = 'ARRAY_LIST'
 list_type = 'SINGLE_LINKED'
 
-lst_books = lt.newList(list_type)
-booksfile = cf.data_dir + 'GoodReads/books.csv'
+lstmovies = lt.newList(list_type)
+moviesfile = cf.data_dir + 'theMoviesdb/SmallMoviesDetailsCleaned.csv'
+
 
 def setUp():
-    print('Loading books')
-    loadCSVFile(booksfile, lst_books)
-    print(lst_books['size'])
+    print('Loading Movies')
+    loadCSVFile(moviesfile, lstmovies)
+    print(lstmovies['size'])
 
 
 def tearDown():
@@ -44,7 +45,7 @@ def tearDown():
 
 
 def loadCSVFile(file, lst):
-    input_file = csv.DictReader(open(file, encoding = "utf-8"))
+    input_file = csv.DictReader(open(file, encoding = "utf-8"), delimiter=';')
     for row in input_file:
         lt.addLast(lst, row)
 
@@ -52,10 +53,15 @@ def printList(lst):
     iterator = it.newIterator(lst)
     while it.hasNext(iterator):
         element = it.next(iterator)
-        print(element['goodreads_book_id'])
+        print(element['id'])
 
 def less(element1, element2):
-    if int(element1['goodreads_book_id']) < int(element2['goodreads_book_id']):
+    if int(element1['id']) < int(element2['id']):
+        return True
+    return False
+
+def greater(element1, element2):
+    if int(element1['id']) > int(element2['id']):
         return True
     return False
 
@@ -64,19 +70,18 @@ def test_sort():
     Lista con elementos en orden aleatorio
     """
     print("sorting ....")
-    sort.shellSort(lst_books, less)
+    sort.insertionSort(lstmovies, less)
 
 def test_loading_CSV_y_ordenamiento():
     """
     Prueba que se pueda leer el archivo y que despues de relizar el sort, el orden este correcto
     """
     setUp()
-    sort.shellSort(lst_books,less)
-    while not (lt.isEmpty(lst_books)):
-        x = int(lt.removeLast(lst_books)['goodreads_book_id'])
-        if not (lt.isEmpty(lst_books)):
-            y = int(lt.lastElement(lst_books)['goodreads_book_id'])
+    sort.insertionSort(lstmovies,less)
+    while not (lt.isEmpty(lstmovies)):
+        x = int(lt.removeLast(lstmovies)['id'])
+        if not (lt.isEmpty(lstmovies)):
+            y = int(lt.lastElement(lstmovies)['id'])
         else:
             break
         assert x > y
-
