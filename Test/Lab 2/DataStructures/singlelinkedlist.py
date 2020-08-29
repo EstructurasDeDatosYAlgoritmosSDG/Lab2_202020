@@ -1,7 +1,8 @@
 """
  * Copyright 2020, Departamento de sistemas y Computación, Universidad de Los Andes
  * 
- * Desarrollado para el curso ISIS1225 - Estructuras de Datos y Algoritmos
+ *
+ * Desarrolado para el curso ISIS1225 - Estructuras de Datos y Algoritmos
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,34 +18,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  """
+ 
+import config
+from DataStructures import listnode as node 
+from Utils import error as error
 
 """
-  Este módulo implementa una estructura de datos lineal, como un arreglo de apuntadores a 
-  los nodos de la lista.
+  Este módulo implementa una estructura de datos lineal mediante una lista encadenada sencillamente 
+  para almacenar una colección de elementos.  Los elementos se cuentan desde la posición 1.
 """
-import config
-from Utils import error as error
+
 
 def newList (cmpfunction=None):
     """Crea una lista vacia.
 
+    Se inicializan los apuntadores a la primera y ultima posicion en None.  El tipo de la lista
+    se inicializa como SINGLE_LINKED
     Args:
         cmpfunction: Función de comparación para los elementos de la lista
     Returns:
-        Un diccionario que representa la estructura de datos de una lista
+        Un diccionario que representa la estructura de datos de una lista encadanada vacia.
 
     Raises:
 
     """
-    new_list = {'elements':[], 'size':0, 'type':'ARRAY_LIST','cmpfunction':cmpfunction }
-    return (new_list)
+    new_list = {'first':None, 'last':None, 'size':0, 'type':'SINGLE_LINKED', 'cmpfunction':cmpfunction}
+    return new_list
+
+
 
 
 def addFirst(lst, element):
     """Agrega un elemento a la lista en la primera posicion.
 
-    Agrega un elemento en la primera posición de la lista, se incrementa 
-    el tamaño de la lista en uno.
+    Agrega un elemento en la primera posición de la lista, ajusta el apuntador al primer elemento e incrementa 
+    el tamaño de la lista.
 
     Args:
         lst:  La lista don de inserta el elemento
@@ -57,11 +65,17 @@ def addFirst(lst, element):
         Exception
     """
     try:
-        lst['elements'].insert (0,element)
+        new_node = node.newSingleNode (element)
+        new_node ['next'] = lst['first']
+        lst['first'] = new_node
+        if (lst['size'] == 0):
+            lst ['last'] = lst['first']
         lst['size'] += 1
+        return lst
     except Exception as exp:
-        error.reraise (exp, 'arraylist->addFirst: ')
+        error.reraise (exp, 'singlelinkedlist->addFirst: ')
        
+
 
 
 
@@ -78,11 +92,20 @@ def addLast(lst, element):
     Raises:
         Exception
     """
-    try:
-        lst['elements'].append (element)
+    try: 
+        new_node = node.newSingleNode (element)
+
+        if lst['size'] == 0:
+            lst['first'] = new_node
+        else:
+            lst['last']['next'] = new_node
+        lst['last']= new_node
         lst['size'] += 1
+        return lst
     except Exception as exp:
-        error.reraise (exp, 'arraylist->addLast: ')
+        error.reraise (exp, 'singlelinkedlist->addLast: ')
+
+
 
 
 
@@ -97,8 +120,8 @@ def isEmpty (lst):
     """
     try:
         return lst['size'] == 0
-    except Exception as exp:
-        error.reraise (exp, 'arraylist->isEmpty: ')
+    except Exception as exp: 
+        error.reraise (exp, 'singlelinkedlist->isEmpty: ')
 
 
 
@@ -115,9 +138,7 @@ def size(lst):
     try:
         return lst['size'] 
     except Exception as exp:
-        error.reraise (exp, 'arraylist->size: ')
-
-
+        error.reraise (exp, 'singlelinkedlist->size: ')
 
 
 
@@ -131,11 +152,10 @@ def firstElement (lst):
         Exception
     """
     try:
-        return lst['elements'][0]
+        if 'info' in lst['first']: 
+            return lst['first']['info']
     except Exception as exp:
-        error.reraise (exp, 'arraylist->firstElement: ')
-
-
+        error.reraise (exp, 'singlelinkedlist->fisrtElement: ')
 
 
 
@@ -149,9 +169,10 @@ def lastElement (lst):
         Exception
     """
     try:
-        return lst['elements'][lst['size']-1]
+        if 'info' in lst['last']:
+            return lst['last']['info']
     except Exception as exp:
-        error.reraise (exp, 'arraylist->lastElement: ')
+        error.reraise (exp, 'singlelinkedlist->lastElement: ')
 
 
 
@@ -170,9 +191,14 @@ def getElement (lst, pos):
         Exception
     """
     try:
-        return lst['elements'][pos-1]
+        searchpos = 1
+        node = lst['first']
+        while searchpos < pos:
+            searchpos+=1
+            node = node['next']
+        return node['info']
     except Exception as exp:
-        error.reraise (exp, 'arraylist->getElement: ')
+        error.reraise (exp, 'singlelinkedlist->getElement: ')
 
 
 
@@ -191,10 +217,21 @@ def deleteElement (lst, pos):
         Exception
     """
     try:
-        lst['elements'].pop(pos-1)
-        lst['size'] -= 1    
+        node = lst['first']
+        prev = lst['first']
+        searchpos = 1
+        if (pos == 1):
+            lst['first'] = lst['first']['next']
+        elif(pos > 1):
+            while searchpos < pos:
+                searchpos+=1
+                prev = node
+                node = node['next']
+            prev['next'] = node['next']
+        lst['size'] -= 1
+        return lst
     except Exception as exp:
-        error.reraise (exp, 'arraylist->deleteElement: ')
+        error.reraise (exp, 'singlelinkedlist->deleteElement: ')
 
 
 
@@ -212,11 +249,19 @@ def removeFirst (lst):
         Exception
     """
     try:
-        element = lst['elements'].pop(0)
-        lst['size'] -= 1
-        return element
+        if lst['first'] != None:
+            temp = lst['first']['next']
+            node = lst['first'] 
+            lst['first'] = temp
+            lst['size'] -= 1
+            if (lst['size'] == 0):
+                lst['last'] = lst['first']
+            return node['info']
+        else:
+            return None
     except Exception as exp:
-        error.reraise (exp, 'arraylist->removeFirst: ')
+        error.reraise (exp, 'singlelinkedlist->removeFirst: ')
+
 
 
 
@@ -234,11 +279,25 @@ def removeLast (lst):
         Exception
     """
     try:
-        element = lst['elements'].pop(lst['size']-1)
-        lst['size'] -= 1
-        return element
+        if lst['size'] > 0:
+            if lst['first'] == lst['last']:
+                node = lst['first'] 
+                lst['last'] = None
+                lst['first'] = None
+            else:
+                temp = lst['first']    
+                while temp['next'] != lst['last']:
+                    temp = temp['next']
+                node = lst['last']
+                lst['last'] = temp
+                lst['last']['next'] = None
+            lst['size'] -= 1
+            return node['info']
+        else:
+            return None
     except Exception as exp:
-        error.reraise (exp, 'arraylist->remoLast: ')
+        error.reraise (exp, 'singlelinkedlist->remoLast: ')
+
 
 
 
@@ -257,11 +316,24 @@ def insertElement (lst, element, pos):
         Exception
     """
     try:
-        lst['elements'].insert (pos-1,element) 
+        new_node = node.newSingleNode (element)
+        if (pos == 1):
+            new_node['next'] = lst['first']
+            lst['first'] = new_node
+        else:
+            cont = 1
+            prev = lst['first']
+            current  = lst['first']
+            while cont < pos:
+                prev = current
+                current = current['next']
+                cont += 1
+            new_node['next'] = current
+            prev['next'] = new_node
         lst['size'] += 1
+        return lst
     except Exception as exp:
-        error.reraise (exp, 'arraylist->insertElement: ')
-
+        error.reraise (exp, 'singlelinkedlist->insertElement: ')
 
 
 
@@ -271,7 +343,7 @@ def isPresent (lst, element):
     
     Informa si un elemento está en la lista.  Si esta presente, retorna la posición en la que se encuentra 
     o cero (0) si no esta presente. Se utiliza la función de comparación utilizada durante la creación 
-    de la lista para comparar los elementos, la cual debe retornan cero si los elementos son iguales.
+    de la lista para comparar los elementos. La cual debe retornar cero en caso de que los elementos sean iguales.
 
     Args:
         lst: La lista a examinar
@@ -281,19 +353,20 @@ def isPresent (lst, element):
         Exception
     """
     try:
-        size = lst['size']
+        size = lst ['size']
         if size > 0:
+            node = lst['first']
             keyexist = False
             for keypos in range (1,size+1):
-                if (lst['cmpfunction'] (element, lst['elements'][keypos-1])==0):
+                if (lst['cmpfunction'] (element, node['info'] )==0):
                     keyexist = True
                     break
+                node = node['next']
             if keyexist:
                 return keypos
-        return 0   
+        return 0        
     except Exception as exp:
-        error.reraise (exp, 'arraylist->isPresent: ')
-        print(exp)
+        error.reraise (exp, 'singlelinkedlist->isPresent: ')
 
 
 
@@ -311,12 +384,18 @@ def changeInfo (lst, pos, newinfo):
         Exception
     """
     try:
-        lst['elements'][pos-1] = newinfo
+        current  = lst['first']
+        cont = 1
+        while cont < pos:
+            current = current['next']
+            cont += 1
+        current['info'] = newinfo
+        return lst
     except Exception as exp:
-        error.reraise (exp, 'arraylist->changeInfo: ')
+        error.reraise (exp, 'singlelinkedlist->changeInfo: ')
 
 
-
+    
 
 def exchange (lst, pos1, pos2):
     """ Intercambia la informacion en las posiciones pos1 y pos2 de la lista.
@@ -336,8 +415,7 @@ def exchange (lst, pos1, pos2):
         changeInfo (lst, pos2, infopos1)
         return lst
     except Exception as exp:
-        error.reraise (exp, 'arraylist->exchange: ')
-
+        error.reraise (exp, 'singlelinkedlist->exchange: ')
 
 
 
@@ -357,16 +435,15 @@ def subList (lst, pos, numelem):
         Exception
     """
     try:
-        sublst = {'elements':[], 'size':0, 'type':'ARRAY_LIST', 'cmpfunction':lst['cmpfunction'] }
-        elem = pos-1
+        sublst = {'first':None, 'last':None, 'size':0, 'type':'SINGLE_LINKED', 'cmpfunction':lst['cmpfunction']}
         cont = 1
+        loc = pos
         while  cont <= numelem:
-            sublst['elements'].append (lst['elements'][elem])
-            sublst['size'] += 1
-            elem += 1
+            elem = getElement (lst, loc)
+            addLast (sublst, elem)
+            loc += 1
             cont += 1
         return sublst
     except Exception as exp:
-        error.reraise (exp, 'arraylist->subList: ')
-
+        error.reraise (exp, 'singlelinkedlist->subList: ')
 

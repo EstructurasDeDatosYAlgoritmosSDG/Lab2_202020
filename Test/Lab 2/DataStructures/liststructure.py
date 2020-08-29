@@ -18,26 +18,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
-"""
-  Este módulo implementa una estructura de datos lineal, como un arreglo de apuntadores a 
-  los nodos de la lista.
-"""
 import config
 from Utils import error as error
+from DataStructures import arraylist as alt
+from DataStructures import singlelinkedlist as slt 
 
-def newList (cmpfunction=None):
+"""
+  Este módulo selecciona la estructura de datos deseada para ejectuar una operación del TAD Lista.
+"""
+
+def newList (datastructure='SINGLE_LINKED', cmpfunction=None):
     """Crea una lista vacia.
 
     Args:
         cmpfunction: Función de comparación para los elementos de la lista
     Returns:
-        Un diccionario que representa la estructura de datos de una lista
-
+        Una nueva lista
     Raises:
-
+        Exception
     """
-    new_list = {'elements':[], 'size':0, 'type':'ARRAY_LIST','cmpfunction':cmpfunction }
-    return (new_list)
+    try:
+        if (datastructure == "ARRAY_LIST"):
+            lt = alt.newList(cmpfunction)
+        else:
+            lt = slt.newList(cmpfunction)
+        return lt
+    except Exception as exp:
+        error.reraise (exp, 'list->newList: ')
+
 
 
 def addFirst(lst, element):
@@ -57,11 +65,13 @@ def addFirst(lst, element):
         Exception
     """
     try:
-        lst['elements'].insert (0,element)
-        lst['size'] += 1
+        if (lst['type']=='ARRAY_LIST'):
+            alt.addFirst (lst, element)
+        else:
+            slt.addFirst (lst, element)
     except Exception as exp:
-        error.reraise (exp, 'arraylist->addFirst: ')
-       
+        error.reraise (exp, 'List->addFirst: ')
+
 
 
 
@@ -79,10 +89,13 @@ def addLast(lst, element):
         Exception
     """
     try:
-        lst['elements'].append (element)
-        lst['size'] += 1
+        if (lst['type']=='ARRAY_LIST'):
+            alt.addLast (lst, element)
+        else:
+            slt.addLast (lst, element)
     except Exception as exp:
-        error.reraise (exp, 'arraylist->addLast: ')
+        error.reraise (exp, 'List->addLast: ')
+
 
 
 
@@ -96,9 +109,13 @@ def isEmpty (lst):
         Exception
     """
     try:
-        return lst['size'] == 0
+        if (lst['type']=='ARRAY_LIST'):
+            return alt.isEmpty(lst)
+        else:
+            return slt.isEmpty(lst)
     except Exception as exp:
-        error.reraise (exp, 'arraylist->isEmpty: ')
+        error.reraise (exp, 'List->isEmpty: ')
+
 
 
 
@@ -113,10 +130,12 @@ def size(lst):
         Exception
     """
     try:
-        return lst['size'] 
+        if (lst['type']=='ARRAY_LIST'):
+            return alt.size(lst)
+        else:
+            return slt.size(lst)
     except Exception as exp:
-        error.reraise (exp, 'arraylist->size: ')
-
+        error.reraise (exp, 'List->size: ')
 
 
 
@@ -131,11 +150,12 @@ def firstElement (lst):
         Exception
     """
     try:
-        return lst['elements'][0]
+        if (lst['type']=='ARRAY_LIST'):
+            return alt.firstElement (lst)
+        else:
+            return slt.firstElement (lst)
     except Exception as exp:
-        error.reraise (exp, 'arraylist->firstElement: ')
-
-
+        error.reraise (exp, 'List->firstElement: ')
 
 
 
@@ -149,9 +169,12 @@ def lastElement (lst):
         Exception
     """
     try:
-        return lst['elements'][lst['size']-1]
+        if (lst['type']=='ARRAY_LIST'):
+            return alt.lastElement(lst)
+        else:
+            return slt.lastElement(lst)
     except Exception as exp:
-        error.reraise (exp, 'arraylist->lastElement: ')
+        error.reraise (exp, 'List->lastElement: ')
 
 
 
@@ -170,9 +193,12 @@ def getElement (lst, pos):
         Exception
     """
     try:
-        return lst['elements'][pos-1]
+        if (lst['type']=='ARRAY_LIST'):
+            return alt.getElement (lst, pos) 
+        else:
+            return slt.getElement (lst, pos) 
     except Exception as exp:
-        error.reraise (exp, 'arraylist->getElement: ')
+        error.reraise (exp, 'List->getElement: ')
 
 
 
@@ -191,10 +217,12 @@ def deleteElement (lst, pos):
         Exception
     """
     try:
-        lst['elements'].pop(pos-1)
-        lst['size'] -= 1    
+        if (lst['type']=='ARRAY_LIST'):
+            alt.deleteElement(lst, pos) 
+        else:
+            slt.deleteElement(lst, pos) 
     except Exception as exp:
-        error.reraise (exp, 'arraylist->deleteElement: ')
+        error.reraise (exp, 'List->deleteElement: ')
 
 
 
@@ -212,11 +240,12 @@ def removeFirst (lst):
         Exception
     """
     try:
-        element = lst['elements'].pop(0)
-        lst['size'] -= 1
-        return element
+        if (lst['type']=='ARRAY_LIST'):
+            return alt.removeFirst (lst)
+        else:
+            return slt.removeFirst (lst)
     except Exception as exp:
-        error.reraise (exp, 'arraylist->removeFirst: ')
+        error.reraise (exp, 'List->removeFirst: ')
 
 
 
@@ -234,11 +263,12 @@ def removeLast (lst):
         Exception
     """
     try:
-        element = lst['elements'].pop(lst['size']-1)
-        lst['size'] -= 1
-        return element
+        if (lst['type']=='ARRAY_LIST'):
+            return alt.removeLast (lst)
+        else:
+            return slt.removeLast (lst)
     except Exception as exp:
-        error.reraise (exp, 'arraylist->remoLast: ')
+        error.reraise (exp, 'List->removeLast: ')
 
 
 
@@ -257,11 +287,12 @@ def insertElement (lst, element, pos):
         Exception
     """
     try:
-        lst['elements'].insert (pos-1,element) 
-        lst['size'] += 1
+        if (lst['type']=='ARRAY_LIST'):
+            alt.insertElement (lst, element, pos)
+        else:
+            slt.insertElement (lst, element, pos)
     except Exception as exp:
-        error.reraise (exp, 'arraylist->insertElement: ')
-
+        error.reraise (exp, 'List->insertElement: ')
 
 
 
@@ -271,7 +302,7 @@ def isPresent (lst, element):
     
     Informa si un elemento está en la lista.  Si esta presente, retorna la posición en la que se encuentra 
     o cero (0) si no esta presente. Se utiliza la función de comparación utilizada durante la creación 
-    de la lista para comparar los elementos, la cual debe retornan cero si los elementos son iguales.
+    de la lista para comparar los elementos.
 
     Args:
         lst: La lista a examinar
@@ -281,39 +312,12 @@ def isPresent (lst, element):
         Exception
     """
     try:
-        size = lst['size']
-        if size > 0:
-            keyexist = False
-            for keypos in range (1,size+1):
-                if (lst['cmpfunction'] (element, lst['elements'][keypos-1])==0):
-                    keyexist = True
-                    break
-            if keyexist:
-                return keypos
-        return 0   
+        if (lst['type']=='ARRAY_LIST'):
+            return alt.isPresent (lst, element)
+        else:
+            return slt.isPresent (lst, element)
     except Exception as exp:
-        error.reraise (exp, 'arraylist->isPresent: ')
-        print(exp)
-
-
-
-
-
-def changeInfo (lst, pos, newinfo):
-    """ Cambia la informacion contenida en el nodo de la lista que se encuentra en la posicion pos.
-    
-    Args:   
-        lst: La lista a examinar
-        pos: la posición de la lista con la información a cambiar
-        newinfo: La nueva información que se debe poner en el nodo de la posición pos
-
-    Raises:
-        Exception
-    """
-    try:
-        lst['elements'][pos-1] = newinfo
-    except Exception as exp:
-        error.reraise (exp, 'arraylist->changeInfo: ')
+        error.reraise (exp, 'List->isPresent: ')
 
 
 
@@ -330,14 +334,34 @@ def exchange (lst, pos1, pos2):
         Exception
     """
     try:
-        infopos1 = getElement (lst, pos1)
-        infopos2 = getElement (lst, pos2)
-        changeInfo (lst, pos1, infopos2)
-        changeInfo (lst, pos2, infopos1)
-        return lst
+        if (lst['type']=='ARRAY_LIST'):
+            alt.exchange (lst, pos1, pos2)
+        else:
+            slt.exchange (lst, pos1, pos2)
     except Exception as exp:
-        error.reraise (exp, 'arraylist->exchange: ')
+        error.reraise (exp, 'List->exchange: ')
 
+
+
+
+def changeInfo (lst, pos, element):
+    """ Cambia la informacion contenida en el nodo de la lista que se encuentra en la posicion pos.
+    
+    Args:   
+        lst: La lista a examinar
+        pos: la posición de la lista con la información a cambiar
+        newinfo: La nueva información que se debe poner en el nodo de la posición pos
+
+    Raises:
+        Exception
+    """
+    try:
+        if (lst['type']=='ARRAY_LIST'):
+            alt.changeInfo (lst, pos, element)
+        else:
+            slt.changeInfo (lst, pos, element)
+    except Exception as exp:
+        error.reraise (exp, 'List->changeInfo: ')
 
 
 
@@ -357,16 +381,12 @@ def subList (lst, pos, numelem):
         Exception
     """
     try:
-        sublst = {'elements':[], 'size':0, 'type':'ARRAY_LIST', 'cmpfunction':lst['cmpfunction'] }
-        elem = pos-1
-        cont = 1
-        while  cont <= numelem:
-            sublst['elements'].append (lst['elements'][elem])
-            sublst['size'] += 1
-            elem += 1
-            cont += 1
-        return sublst
+        if (lst['type']=='ARRAY_LIST'):
+            return alt.subList (lst, pos, numelem)
+        else:
+            return slt.subList (lst, pos, numelem)
     except Exception as exp:
-        error.reraise (exp, 'arraylist->subList: ')
+        error.reraise (exp, 'List->subList: ')
+
 
 
